@@ -1,0 +1,60 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		jcenter()
+	}
+	dependencies {
+		classpath("net.serenity-bdd:serenity-gradle-plugin:2.2.9")
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.labcorp'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+apply plugin: 'java'
+apply plugin: "net.serenity-bdd.aggregator"
+
+configurations.all {
+	resolutionStrategy {
+		force "io.cucumber:cucumber-core:5.7.0"
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	// https://mvnrepository.com/artifact/net.serenity-bdd/serenity-spring
+	implementation "net.serenity-bdd:serenity-core:2.2.10",
+			"net.serenity-bdd:serenity-cucumber5:2.2.0"
+	// https://mvnrepository.com/artifact/io.cucumber/cucumber-junit
+	testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '5.7.0'
+// https://mvnrepository.com/artifact/org.springframework/spring-web
+	implementation group: 'org.springframework', name: 'spring-web', version: '5.2.7.RELEASE'
+
+	// https://mvnrepository.com/artifact/net.serenity-bdd/serenity-spring
+	testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.9'
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	// https://mvnrepository.com/artifact/net.serenity-bdd/serenity-model
+	implementation group: 'net.serenity-bdd', name: 'serenity-model', version: '2.2.9'
+
+}
+
+test {
+	systemProperty "spring.profiles.active", System.getProperty("spring.profiles.active")
+	systemProperty "jobDescription", System.getProperty("job.description")
+	systemProperty "jobId", System.getProperty("job.id")
+	systemProperty "jobCity", System.getProperty("job.city")
+}
